@@ -10,11 +10,11 @@ vector<int> Reversed(const vector<int> seq) {
 	return res;
 }
 
-/* int main()
+int main()
 {
 	vector<int> nums = {1, 2 ,3 , 4, 5};
 	vector<int> lst = Reversed(nums);
 	for (auto x: lst)
 		cout << x << " ";
 	return 0;
-} */
+} 
