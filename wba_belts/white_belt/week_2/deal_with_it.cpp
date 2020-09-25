@@ -42,13 +42,13 @@ int main()
 
 		}
 
-		else if (command == "NEXT") {
+		else if (command == "NEXT") { 
 
 			int quant_old_month = month_num[current_month];
 
 			current_month++;
 
-			if (current_month%12 == 0) { 
+			if (current_month % 12 == 0) { 
 				
 				current_month = 0;
 
@@ -58,17 +58,15 @@ int main()
 
 			if (quant_new_month >= quant_old_month) {
 
-				current_deals.resize(month_num[current_month]);
+				current_deals.resize(quant_new_month);
 
 			} else {
 
-				for (int l = quant_new_month; l < quant_old_month; l++) {
+				 for(int j = quant_new_month; j < quant_old_month; j++){
+                    deals_in_month.insert(end(deals_in_month), begin(month_deals[j]), end(month_deals[j]));
+                }
 
-					for (auto deals: current_deals[l]) {
-						current_deals[quant_new_month - 1].push_back(deals);
-					}
-				}
-
+				current_deals.resize(quant_new_month);
 			}
 
 
