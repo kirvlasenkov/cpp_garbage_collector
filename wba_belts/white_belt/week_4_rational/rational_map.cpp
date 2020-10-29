@@ -59,7 +59,7 @@ private:
 };
 
 // перегрузка операторов сравения, суммирования и вычитания, умножения и деления, а также потоки in и out
-Rational operator+(const Rational &lhs, const Rational &rhs) {
+/* Rational operator+(const Rational &lhs, const Rational &rhs) {
     return Rational(lhs.Numerator() * rhs.Denominator() + lhs.Denominator() * rhs.Numerator(),
                     lhs.Denominator() * rhs.Denominator());
 }
@@ -146,4 +146,4 @@ int main() {
 
     cout << "OK" << endl;
     return 0;
-}
+} */

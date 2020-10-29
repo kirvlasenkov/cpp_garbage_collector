@@ -11,7 +11,7 @@ add_executable(week_4
         lecture_title.cpp
         output.txt
         precision_manip.cpp
-        rational.cpp
         student_list.cpp
         table_processing.cpp
-        work_with_file.cpp)
+        work_with_file.cpp
+        ensure_equal.cpp time_server.cpp)

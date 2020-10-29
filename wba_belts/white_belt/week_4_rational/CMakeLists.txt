@@ -10,4 +10,5 @@ add_executable(
         rational_mult_div.cpp
         rational_io.cpp
         rational_map.cpp
-)
+        rational_throw.cpp
+        rational_calculator.cpp)
