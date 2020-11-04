@@ -16,6 +16,13 @@ public:
     }
 
     explicit Date(int new_year, int new_month, int new_day) {
+        if (!(new_month <= 12 && new_month >= 1)) {
+            throw std::invalid_argument("Month value is invalid: " + std::to_string(new_month));
+
+        } else if (!(new_day <= 31 && new_day >= 1)) {
+            throw std::invalid_argument("Day value is invalid: " + std::to_string(new_day));
+        }
+
         year = new_year;
         month = new_month;
         day = new_day;
@@ -36,7 +43,7 @@ private:
 };
 
 
-bool operator<(const Date &lhs, const Date &rhs) {
+bool operator<(const Date &lhs, const Date &rhs) { // needed to involve map support
     if (lhs.GetYear() != rhs.GetYear()) {
         return lhs.GetYear() < rhs.GetYear();
     } else {
@@ -53,18 +60,25 @@ bool operator<(const Date &lhs, const Date &rhs) {
 }
 
 
-void NextIsDash(std::istream &stream) {
+void NextIsDash(std::istream &stream) { // checking next symbol for answer is it dash or not
     if (stream.peek() != '-') {
         throw std::exception();
     }
     stream.ignore(1);
+    if (stream.peek() == EOF) {
+        throw std::exception();
+    }
 }
 
-std::ostream &operator<<(std::ostream &stream, const Date &date) { // out operator realization
-    stream << std::setfill('0');
-    stream << std::setw(4) << date.GetYear() << "-"
-           << std::setw(2) << date.GetMonth() << "-"
-           << std::setw(2) << date.GetDay();
+std::ostream &operator<<(std::ostream &stream, const Date &date) {// out operator realization
+    try {
+        stream << std::setfill('0');
+        stream << std::setw(4) << date.GetYear() << "-"
+               << std::setw(2) << date.GetMonth() << "-"
+               << std::setw(2) << date.GetDay();
+    } catch (std::exception &ex) {
+        throw std::runtime_error("Wrong date format");
+    }
     return stream;
 }
 
@@ -82,8 +96,14 @@ std::istream &operator>>(std::istream &stream, Date &date) { // in operator real
         NextIsDash(string_stream);
         string_stream >> new_day;
 
+        if (string_stream.peek() != EOF) {
+            throw std::exception();
+        }
+
     } catch (std::exception &ex) {
-        throw std::exception();
+        std::stringstream str_stream;
+        string_stream << date;
+        throw std::runtime_error("Wrong date format: " + str_line); // catching if the date is wrong formated
     }
     date = Date{new_year, new_month, new_day};
     return stream;
@@ -125,8 +145,10 @@ public:
     }
 
     void FindDate(const Date &date) const { // prints the events for a certain date each in a new line
-        for (auto &event: MAIN_STORAGE.at(date)) {
-            std::cout << event << std::endl;
+        if (MAIN_STORAGE.count(date) != 0) {
+            for (auto &event: MAIN_STORAGE.at(date)) {
+                std::cout << event << std::endl;
+            }
         }
     }
 
@@ -148,52 +170,63 @@ int main() {
 
     std::string command;
     while (getline(std::cin, command)) {
-        try {
-            std::string command_name;
-            std::stringstream stream(command);
-            stream >> command_name;
+        std::string command_name;
+        std::stringstream stream(command);
+        stream >> command_name;
+        if (stream) {
+            try {
+                if (command_name == "Add") { // ADD
+                    stream.ignore(1);
+                    Date date;
+                    std::string event;
+                    stream >> date;
+                    stream.ignore(1);
+                    stream >> event;
 
-            if (command_name == "Add") {
-                stream.ignore(1);
-                Date date;
-                std::string event;
-                stream >> date;
-                stream.ignore(1);
-                stream >> event;
-                std::cout << date << "  " << event;
+                    db.AddEvent(date, event);
 
-            } else if (command_name == "Del") {
-                stream.ignore(1);
-                Date date;
-                std::string event;
-                stream >> date;
-                if (stream.peek() == EOF) {
-                    std::cout << "without event";
+                } else if (command_name == "Del") { // DELETE
+                    stream.ignore(1);
+                    Date date;
+                    std::string event;
+                    stream >> date;
+                    if (stream.peek() == EOF) { // if there's no event in console in
+                        std::cout << db.DelDate(date) << std::endl;
+                    } else {
+                        stream >> event;
+                        std::cout << db.DelEvent(date, event) << std::endl;
+                    }
+
+                } else if (command_name == "Find") { // DELETE
+                    stream.ignore(1);
+                    Date date;
+                    std::string event;
+                    stream >> date;
+
+                    db.FindDate(date);
+
+                } else if (command_name == "Print") { // PRINT
+                    db.Print();
+
                 } else {
-                    std::cout << "with event";
+                    throw std::runtime_error("Unknown command: " + command_name);
                 }
 
-            } else if (command_name == "Find") {
-                ;
 
-            } else if (command_name == "Print") {
-                ;
+            } catch (std::exception &ex) {
+                std::cout << ex.what() << std::endl;
             }
-
-        } catch (std::exception &ex) {
-            std::cout << "error";
         }
-
     }
 
 
-    db.AddEvent(Date{2009, 19, 11}, "grg");
-    db.AddEvent(Date{2009, 19, 11}, "arer");
-    db.AddEvent(Date{2009, 19, 11}, "aafvwev");
-    db.AddEvent(Date{9, 19, 11}, "vwev");
-    db.AddEvent(Date{2019, 19, 11}, "aafv");
-    db.AddEvent(Date{19, 1, 2}, "aafv");
-    db.Print();
+    // db.AddEvent(Date{2009, 19, 11}, "grg");
+    // db.AddEvent(Date{2009, 19, 11}, "arer");
+    // db.AddEvent(Date{2009, 19, 11}, "aafvwev");
+    // db.AddEvent(Date{9, 19, 11}, "vwev");
+    // db.AddEvent(Date{2019, 19, 11}, "aafv");
+    // db.AddEvent(Date{19, 1, 2}, "aafv");
+    // db.Print();
 
     // std::cout << db.DelDate({2009, 19, 11}) << std::endl;
     // db.FindDate({2009, 19, 11});
