@@ -56,11 +56,11 @@ struct BusesForStopResponse {
     vector<string> buses;
 };
 
-ostream &operator<<(ostream &os, const BusesForStopResponse &r) {
+ostream& operator << (ostream& os, const BusesForStopResponse& r) {
     if (r.buses.empty()) {
         os << "No stop" << endl;
     } else {
-        for (const auto &bus : r.buses) {
+        for (const auto& bus : r.buses) {
             os << bus << " ";
         }
         os << endl;
@@ -73,16 +73,16 @@ struct StopsForBusResponse {
     map<string, vector<string>> stops_for_buses;
 };
 
-ostream &operator<<(ostream &os, const StopsForBusResponse &r) {
+ostream& operator << (ostream& os, const StopsForBusResponse& r) {
     if (r.stops_for_buses.empty()) {
         os << "No bus" << endl;
     } else {
-        for (const auto &stop_and_buses : r.stops_for_buses) {
+        for (const auto& stop_and_buses : r.stops_for_buses) {
             os << "Stop " << stop_and_buses.first << ":";
             if (stop_and_buses.second.size() == 1) {
                 os << " no interchange" << endl;
             } else {
-                for (const auto &bus : stop_and_buses.second) {
+                for (const auto& bus : stop_and_buses.second) {
                     if (bus != r.bus) {
                         os << " " << bus;
                     }
@@ -98,13 +98,13 @@ struct AllBusesResponse {
     map<string, vector<string>> buses_to_stops;
 };
 
-ostream &operator<<(ostream &os, const AllBusesResponse &r) {
+ostream& operator << (ostream& os, const AllBusesResponse& r) {
     if (r.buses_to_stops.empty()) {
         os << "No buses" << endl;
     } else {
-        for (const auto &bus_and_stops : r.buses_to_stops) {
+        for (const auto& bus_and_stops : r.buses_to_stops) {
             os << "Bus " << bus_and_stops.first << ":";
-            for (const auto &stop : bus_and_stops.second) {
+            for (const auto& stop : bus_and_stops.second) {
                 os << " " << stop;
             }
             os << endl;
@@ -130,11 +130,11 @@ public:
         }
     }
 
-    StopsForBusResponse GetStopsForBus(const string &bus) const {
+    StopsForBusResponse GetStopsForBus(const string& bus) const {
         map<string, vector<string>> result;
 
         if (buses_to_stops.count(bus) > 0) {
-            for (const auto &stop : buses_to_stops.at(bus)) {
+            for (const auto& stop : buses_to_stops.at(bus)) {
                 result.insert(make_pair(stop, stops_to_buses.at(stop)));
             }
         }

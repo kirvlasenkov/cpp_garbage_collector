@@ -3,82 +3,68 @@
 #include <map>
 #include <vector>
 
-using namespace std;
+int main() {
+    int request_number;
+    std::cin >> request_number;
+    std::map<std::string, std::vector<std::string>> bus_to_stop;
+    std::map<std::string, std::vector<std::string>> stop_to_bus;
 
-/* int main() {
-  int q;
-  cin >> q;
+    for (size_t i = 0; i < request_number; i++) {
+        std::string request;
+        std::cin >> request;
 
-  map<string, vector<string>> buses_to_stops, stops_to_buses;
-
-  for (int i = 0; i < q; ++i) {
-    string operation_code;
-    cin >> operation_code;
-
-    if (operation_code == "NEW_BUS") {
-
-      string bus;
-      cin >> bus;
-      int stop_count;
-      cin >> stop_count;
-      vector<string>& stops = buses_to_stops[bus];
-      stops.resize(stop_count);
-      for (string& stop : stops) {
-        cin >> stop;
-        stops_to_buses[stop].push_back(bus);
-      }
-
-    } else if (operation_code == "BUSES_FOR_STOP") {
-
-      string stop;
-      cin >> stop;
-      if (stops_to_buses.count(stop) == 0) {
-        cout << "No stop" << endl;
-      } else {
-        for (const string& bus : stops_to_buses[stop]) {
-          cout << bus << " ";
-        }
-        cout << endl;
-      }
-
-    } else if (operation_code == "STOPS_FOR_BUS") {
-
-      string bus;
-      cin >> bus;
-      if (buses_to_stops.count(bus) == 0) {
-        cout << "No bus" << endl;
-      } else {
-        for (const string& stop : buses_to_stops[bus]) {
-          cout << "Stop " << stop << ": ";
-          if (stops_to_buses[stop].size() == 1) {
-            cout << "no interchange";
-          } else {
-            for (const string& other_bus : stops_to_buses[stop]) {
-              if (bus != other_bus) {
-                cout << other_bus << " ";
-              }
+        if (request == "NEW_BUS") {
+            std::string bus;
+            int stop_count;
+            std::cin >> bus >> stop_count;
+            for (size_t j = 0; i < stop_count; i++) {
+                std::string stop;
+                std::cin >> stop;
+                bus_to_stop[bus].push_back(stop);
+                stop_to_bus[stop].push_back(bus);
             }
-          }
-          cout << endl;
-        }
-      }
+        } else if (request == "BUSES_FOR_STOP") {
+            std::string stop;
+            std::cin >> stop;
+            for (auto bus : stop_to_bus[stop]) {
+                std::cout << bus << " ";
+            }
+            std::cout << std::endl;
+        } else if (request == "STOPS_FOR_BUSES") {
+            std::string bus;
+            std::cin >> bus;
 
-    } else if (operation_code == "ALL_BUSES") {
+            if (bus_to_stop.count(bus) == 0) {
+                std::cout << "No bus" << std::endl;
+            } else {
+                for (auto &stop : bus_to_stop[bus]) {
+                    if (stop_to_bus[stop].size() == 1) {
+                        std::cout << "no interchange";
+                    } else {
+                        std::cout << "Stop " + stop + ": ";
+                        for (auto &temp_bus : stop_to_bus[stop]) {
+                            if (temp_bus != bus) {
+                                std::cout << temp_bus << " ";
+                            }
+                        }
+                        std::cout << std::endl;
+                    }
+                }
+            }
+        } else if (request == "ALL_BUSES") {
 
-      if (buses_to_stops.empty()) {
-        cout << "No buses" << endl;
-      } else {
-        for (const auto& bus_item : buses_to_stops) {
-          cout << "Bus " << bus_item.first << ": ";
-          for (const string& stop : bus_item.second) {
-            cout << stop << " ";
-          }
-          cout << endl;
+            if (bus_to_stop.empty()) {
+                std::cout << "No buses" << std::endl;
+            } else {
+                for (const auto &bus_item : bus_to_stop) {
+                    std::cout << "Bus " << bus_item.first << ": ";
+                    for (const std::string &stop : bus_item.second) {
+                        std::cout << stop << " ";
+                    }
+                    std::cout << std::endl;
+                }
+            }
         }
-      }
 
     }
-  }
-
-  return 0;
-} */
+}
