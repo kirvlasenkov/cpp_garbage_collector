@@ -34,7 +34,7 @@ public:
         }
         if (new_cols == 0 || new_rows == 0)
             new_rows = new_cols = 0;
-        
+
         num_rows = new_rows;
         num_cols = new_cols;
         MATRIX.assign(new_rows, std::vector<int>(new_cols));
@@ -128,8 +128,8 @@ std::ostream &operator<<(std::ostream &stream, const Matrix &matrix) {
 Matrix operator+(const Matrix &lhs, const Matrix &rhs) {
     if (lhs.GetNumColumns() != rhs.GetNumColumns() &&
         lhs.GetNumRows() != rhs.GetNumRows()) {
-            throw std::invalid_argument("Wrong matrices's sizes");
-        }
+        throw std::invalid_argument("Wrong matrices's sizes");
+    }
 
 
     Matrix answer(lhs.GetNumRows(), lhs.GetNumColumns());
@@ -150,7 +150,7 @@ int main() {
 
         std::cin >> one >> two;
         std::cout << (one == two) << std::endl;
-    } catch (std:: exception &ex) {
+    } catch (std::exception &ex) {
         std::cout << ex.what();
     }
     return 0;
