@@ -1,41 +1,88 @@
 #include <iostream>
-#include <string>
-#include <sstream>
-#include <stack>
+#include <deque>
 
 /*
+enum class Operation {
+    Add,
+    Sub,
+    Mul,
+    Div
+};
+
+struct Request {
+    Operation operation;
+    std::string number;
+};
+
+std::istream &operator>>(std::istream &str, Request &r) {
+    std::string sign;
+    std::string number;
+    str >> sign >> number;
+
+    if (sign == "+") {
+        r.operation = Operation::Add;
+        r.number = number;
+    } else if (sign == "-") {
+        r.operation = Operation::Sub;
+        r.number = number;
+    } else if (sign == "*") {
+        r.operation = Operation::Mul;
+        r.number = number;
+    } else if (sign == "/") {
+        r.operation = Operation::Div;
+        r.number = number;
+    }
+
+    return str;
+}
+
+
 int main() {
-    int first = 0;
-    int n = 0;
-    std::stringstream str;
+    int number, quantity;
+    std::cin >> number >> quantity;
 
-    std::cin >> first >> n;
+    std::deque<std::string> Deque;
+    Request r;
 
-    if (n != 0) {
-        for (int i = 0; i < n; i++) {
-            str << '(';
+    Deque.push_back(std::to_string(number));
+
+    for (int i = 0; i < quantity; i++) {
+        std::cin >> r;
+        switch (r.operation) {
+            case Operation::Add:
+                Deque.push_front("(");
+                Deque.push_back(")");
+                Deque.push_back(" + ");
+                Deque.push_back(r.number);
+                break;
+
+            case Operation::Sub:
+                Deque.push_front("(");
+                Deque.push_back(")");
+                Deque.push_back(" - ");
+                Deque.push_back(r.number);
+                break;
+
+            case Operation::Mul:
+                Deque.push_front("(");
+                Deque.push_back(")");
+                Deque.push_back(" * ");
+                Deque.push_back(r.number);
+                break;
+
+            case Operation::Div:
+                Deque.push_front("(");
+                Deque.push_back(")");
+                Deque.push_back(" / ");
+                Deque.push_back(r.number);
+                break;
         }
-    } else {
-        std::cout << first;
-        return 0;
     }
 
-    str << first << ')';
-
-    for (int i = 0; i < n; i++) {
-        int number;
-        char sign;
-        std::cin >> sign >> number;
-
-        if (i != n - 1)
-            str << ' ' << sign << ' ' << number << ')';
-        else
-            str << ' ' << sign << ' ' << number;
-
-
+    for (const auto& item : Deque) {
+        std::cout << item;
     }
-    std::cout << str.str();
 
     return 0;
 }
-*/
+ */

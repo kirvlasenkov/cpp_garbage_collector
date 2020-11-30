@@ -1,5 +1,7 @@
 #include <iostream>
 #include <deque>
+#include <string>
+
 
 
 enum class Operation {
@@ -10,83 +12,93 @@ enum class Operation {
 };
 
 struct Request {
-    Operation type;
-    std::string value;
+    Operation operation;
+    std::string number;
 };
 
-std::istream& operator >> (std::istream& is, Request& q) {
-    std::string str;
-    is >> str;
-    if (str == "+") {
-        q.type = Operation::Add;
-        is >> q.value;
-    } else if (str == "-") {
-        q.type = Operation::Sub;
-        is >> q.value;
-    } else if (str == "*") {
-        q.type = Operation::Mul;
-        is >> q.value;
-    } else if (str == "/") {
-        q.type = Operation::Div;
-        is >> q.value;
+
+std::istream& operator>>(std::istream& str, Request& r) {
+    std::string sign;
+    std::string number;
+    str >> sign >> number;
+
+    if (sign == "+") {
+        r.operation = Operation::Add;
+        r.number = number;
     }
 
-    return is;
+    else if (sign == "-") {
+        r.operation = Operation::Sub;
+        r.number = number;
+    }
+
+    else if (sign == "*") {
+        r.operation = Operation::Mul;
+        r.number = number;
+    }
+
+    else if (sign == "/") {
+        r.operation = Operation::Div;
+        r.number = number;
+    }
+
+    return str;
 }
+
 
 int main() {
-    int x;
-    std::cin >> x;
-
-    int n;
-    std::cin >> n;
-    Request q;
-    Request p;
+    int number, quantity;
+    std::cin >> number >> quantity;
 
     std::deque<std::string> Deque;
-    Deque.push_back(std::to_string(x));
+    Deque.push_back(std::to_string(number));
 
-    for (int i = 0; i < n; ++i) {
-        std::cin >> q;
-        switch (q.type) {
+    Request copy_r;
+    Request r;
+
+    for (int i = 0; i < quantity; i++) {
+        std::cin >> r;
+
+        switch (r.operation) {
             case Operation::Add:
-                Deque.push_back("+");
-                Deque.push_back(q.value);
-                p = q;
+                Deque.emplace_back(" + ");
+                Deque.push_back(r.number);
+                copy_r = r;
                 break;
+
             case Operation::Sub:
-                Deque.push_back("-");
-                Deque.push_back(q.value);
-                p = q;
+                Deque.emplace_back(" - ");
+                Deque.push_back(r.number);
+                copy_r = r;
                 break;
+
             case Operation::Mul:
-                if (p.type == Operation::Add || p.type == Operation::Sub) {
-                    Deque.push_front("(");
-                    Deque.push_back(")");
+                if (copy_r.operation == Operation::Add || copy_r.operation == Operation::Sub) {
+                    Deque.emplace_back(")");
+                    Deque.emplace_front("(");
                 }
-                Deque.push_back("*");
-                Deque.push_back(q.value);
-                p = q;
+
+                Deque.emplace_back(" * ");
+                Deque.push_back(r.number);
+                copy_r = r;
                 break;
+
             case Operation::Div:
-                if (p.type == Operation::Add || p.type == Operation::Sub) {
-                    Deque.push_front("(");
-                    Deque.push_back(")");
+                if (copy_r.operation == Operation::Add || copy_r.operation == Operation::Sub) {
+                    Deque.emplace_back(")");
+                    Deque.emplace_front("(");
                 }
-                Deque.push_back("/");
-                Deque.push_back(q.value);
-                p = q;
+
+                Deque.push_back(" / ");
+                Deque.push_back(r.number);
+                copy_r = r;
                 break;
         }
     }
 
-    for (auto& item : Deque) {
-        if (item == "+" || item == "-" || item == "*" || item == "/") {
-            std::cout << " " << item << " ";
-        } else {
-            std::cout << item;
-        }
+    for (auto& elem: Deque) {
+        std::cout << elem;
     }
-
     return 0;
 }
+
